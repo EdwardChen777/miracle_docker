@@ -1,0 +1,15 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY backend/requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the backend code into the container
+COPY backend /app/
+
+# Expose the port FastAPI will run on
+EXPOSE 8000
+
+# Command to run FastAPI (assuming api.py is the main FastAPI app)
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
