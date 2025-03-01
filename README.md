@@ -7,7 +7,7 @@ This project contains a **FastAPI backend**, a **React frontend** with **Tailwin
 ## Install App
 
 ```
-git clone 
+git clone https://github.com/EdwardChen777/miracle.git
 cd backend 
 python3 -m venv venv
 source venv/bin/activate
