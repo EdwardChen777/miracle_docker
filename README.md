@@ -1,4 +1,4 @@
-# Project Name
+# Miracle Assessment
 
 This project contains a **FastAPI backend**, a **React frontend** with **TailwindCSS** and **ReCharts**, and a **Python scraping script** that can be automated. The backend serves three API endpoints, while the frontend interacts with the backend and provides a simple dashboard to demonstrate the clinical trials data.
 
