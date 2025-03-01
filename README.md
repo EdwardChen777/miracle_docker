@@ -11,7 +11,7 @@ git clone https://github.com/EdwardChen777/miracle.git
 cd backend 
 python3 -m venv venv
 source venv/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 uvicorn api:app --host 127.0.0.1 --port 8000 --reload
 deactivate
 ```
@@ -27,7 +27,7 @@ npm run dev
 cd scrap
 python3 -m venv venv
 source venv/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 python scraper.py
 deactivate
 ```
