@@ -27,6 +27,7 @@ def retrieve_latest_clinical_trials():
 
     if not files:
         print("No archived files found.")
+        return
 
     # Extract timestamps and sort by most recent
     files.sort(key=lambda f: time.strptime(re.search(r'_(\d{8}_\d{6})', f).group(1), "%Y%m%d_%H%M%S"), reverse=True)
@@ -82,7 +83,7 @@ def scrape_clinical_trials(download_dir, max_attempts=2):
                 download_button.click()
 
                 # Wait for the file to be downloaded
-                timeout = 40 
+                timeout = 90 
                 start_time = time.time()
 
                 while time.time() - start_time < timeout:
@@ -111,7 +112,7 @@ def scrape_clinical_trials(download_dir, max_attempts=2):
             attempt += 1
             time.sleep(2 ** attempt)
 
-    print("All retry attempts failed. Exiting.")
+    print("All retry attempts failed. Going for archived files.")
     retrieve_latest_clinical_trials()
     return None
     
