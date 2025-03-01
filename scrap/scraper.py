@@ -19,10 +19,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 def retrieve_latest_clinical_trials():
+    # set up directories 
     curr_dir = os.getcwd()
     archive_dir = 'raw_data_archive'
     download_dir = os.path.join(curr_dir, 'download')
     download_path = os.path.join(download_dir, "ctg-studies.csv")
+    
+    # search for archive folders
     files = [f for f in os.listdir(archive_dir) if f.startswith("ctg-studies_") and f.endswith(".csv")]
 
     if not files:
@@ -33,6 +36,8 @@ def retrieve_latest_clinical_trials():
     files.sort(key=lambda f: time.strptime(re.search(r'_(\d{8}_\d{6})', f).group(1), "%Y%m%d_%H%M%S"), reverse=True)
     latest_file = files[0]
     latest_file_path = os.path.join(archive_dir, latest_file)
+    
+    # copy archive file to download path 
     shutil.copy(latest_file_path, download_path)
     print(f"Copied latest archive file: {latest_file_path} -> {download_path}")
 
@@ -106,12 +111,13 @@ def scrape_clinical_trials(download_dir, max_attempts=2):
             
             finally:
                 driver.quit()
-
+        
         except Exception as e:
             print(f"Attempt {attempt + 1} failed: {e}")
             attempt += 1
             time.sleep(2 ** attempt)
 
+    # download failed --> fetch archive
     print("All retry attempts failed. Going for archived files.")
     retrieve_latest_clinical_trials()
     return None
