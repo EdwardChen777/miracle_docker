@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: miracle_postgres
+    environment:
+      POSTGRES_DB: miracle_scrap
+      POSTGRES_USER: edwardch
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  scraper:
+    build: ./scrap
+    container_name: miracle_scraper
+    environment:
+      DB_NAME: miracle_scrap
+      DB_USER: edwardch
+      DB_PASSWORD: 123456
+      DB_HOST: db  # DB service name in Docker Compose
+      DB_PORT: 5432
+    depends_on:
+      - db
+    volumes:
+      - ./scrap:/app
+    entrypoint: ["python", "scraper.py"]
+
+volumes:
+  postgres_data:

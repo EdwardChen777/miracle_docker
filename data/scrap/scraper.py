@@ -10,6 +10,7 @@ import psycopg2
 import shutil
 import re
 
+# importing selenium modules
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -17,6 +18,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+
+# Fetching the environment variables for DB credentials
+DB_HOST = os.getenv('DB_HOST', 'db')  
+DB_PORT = os.getenv('DB_PORT', '5432')  
+DB_NAME = os.getenv('DB_NAME', 'miracle_scrap')
+DB_USER = os.getenv('DB_USER', 'edwardch')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '123456')
 
 def retrieve_latest_clinical_trials():
     # set up directories 
@@ -88,7 +96,7 @@ def scrape_clinical_trials(download_dir, max_attempts=2):
                 download_button.click()
 
                 # Wait for the file to be downloaded
-                timeout = 90 
+                timeout = 150
                 start_time = time.time()
 
                 while time.time() - start_time < timeout:
@@ -182,11 +190,11 @@ def store_csv(file_name, table_name):
 
         # Connect to PostgreSQL
         conn = psycopg2.connect(
-            dbname='miracle_scrap',
-            user='edwardch',
-            password='123456',
-            host='localhost',
-            port='5434'
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
         )
         cursor = conn.cursor()
 
@@ -233,11 +241,11 @@ def archive_data():
 def combine_data():
     try:
         conn = psycopg2.connect(
-            dbname='miracle_scrap',
-            user='edwardch',
-            password='123456',
-            host='localhost',
-            port='5434'  # Default PostgreSQL port
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
         )
         cursor = conn.cursor()
 

@@ -10,11 +10,15 @@ COPY requirements.txt /app/
 # Install dependencies from the requirements file
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Ensure webdriver-manager is always upgraded
+RUN pip install --upgrade webdriver-manager
+
 # Copy the scraper file into the container
 COPY scraper.py /app/
 
 # Copy the raw_data_archive directory into the container (add this line)
 COPY raw_data_archive /app/raw_data_archive/
+COPY download /app/download/
 
 # Set the entry point for the scraper
 CMD ["python", "scraper.py"]
