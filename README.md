@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-## Web Scraping Script
+## Running Web Scraping Script Locally
 ```
 cd data
 cd scrap
@@ -35,13 +35,22 @@ python scraper.py
 deactivate
 ```
 
-## Setting Up Cron Job
-Open up the terminal (make scraper run every 45 minutes)
+## Building Docker Container for Web Scraping Script with PostgreSQL Database
 ```
-crontab -e
+cd data
+docker-compose build
+docker-compose up -d
 ```
-Add the following to the file
+
+## Setting Up Cron Job in Docker
+Replace the last line of data/scrap/dockerfile
 ```
-*/45 * * * * /path/to/python3 /path/to/scrap/scraper.py
+CMD ["python", "scraper.py"]
+```
+with the following
+```
+WORKDIR /app
+RUN echo "*/45 * * * * python /app/scraper.py" > /etc/crontabs/root  # Runs scraper.py every 45 minutes
+CMD ["crond", "-f"]
 ```
 
