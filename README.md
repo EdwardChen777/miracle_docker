@@ -24,7 +24,9 @@ npm run dev
 
 ## Web Scraping Script
 ```
+cd data
 cd scrap
+mkdir download && mkdir raw_data_archive
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
