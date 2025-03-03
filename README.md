@@ -5,15 +5,23 @@ This project contains a **FastAPI backend**, a **React frontend** with **Tailwin
 ---
 
 ## Clone Repository
-
 ```
 git clone https://github.com/EdwardChen777/miracle_docker.git
-docker-compose up --build -d
 ```
 
 ## Retrieving Data for archive folder 
 Download data from **https://clinicaltrials.gov/search** and move to data/scrap/download
 Add the current timestamp to it in the format of YYYYmmdd_hhmmss (e.g. ctg-studies_20250303_055829)
+
+## Set up Docker Container
+```
+docker-compose up --build -d
+```
+
+## Close Docker Container
+```
+docker-compose down
+```
 
 ## Setting Up Cron Job in Docker
 Replace the last line of data/scrap/dockerfile
