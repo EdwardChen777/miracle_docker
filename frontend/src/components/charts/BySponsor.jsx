@@ -7,9 +7,9 @@ const BySponsor = () => {
     const [trialsBySponsor, setTrialsBySponsor] = useState([]);
     
     useEffect(() => {
-        fetch("/api/trials-by-sponsor") // Thanks to proxy, this hits FastAPI
+        fetch("http://localhost:8000/api/trials-by-sponsor") // Thanks to proxy, this hits FastAPI
         .then(response => response.json())
-        .then(data => {setTrialsBySponsor(data.slice(0, 10))})
+        .then(data => {setTrialsBySponsor(data.slice(0, 10)); console.log('fetched trials by sponsor')})
         .catch(error => console.error("Error fetching data:", error));
     }, []);
 

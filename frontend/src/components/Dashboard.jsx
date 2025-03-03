@@ -11,7 +11,7 @@ const Dashboard = () => {
   // const [euRowSpan, setEuRowSpan] = useState(5);
       
   useEffect(() => {
-      fetch("/api/total-trials") // Thanks to proxy, this hits FastAPI
+      fetch("http://localhost:8000/api/total-trials") // Thanks to proxy, this hits FastAPI
       .then(response => response.json())
       .then(data => {
         console.log(data)

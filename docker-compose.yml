@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # PostgreSQL container
+  db:
+    image: postgres:15
+    container_name: miracle_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: miracle_scrap
+      POSTGRES_USER: edwardch
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432"  # Expose PostgreSQL on port 5434
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./data/database/init.sql:/docker-entrypoint-initdb.d/init.sql  # Initialize with the SQL script
+    networks:
+      - miracle-network
+
+  # Backend container (e.g., Python Flask app)
+  backend:
+    build: ./backend  # Path to your backend Dockerfile
+    container_name: miracle_backend
+    depends_on:
+      - db  # Ensure db is running before backend starts
+    environment:
+      DB_NAME: miracle_scrap
+      DB_USER: edwardch
+      DB_PASSWORD: 123456
+      DB_HOST: db  # Referencing the db service (not localhost)
+      DB_PORT: 5432
+    ports:
+      - "8000:8000"  # Expose the backend on port 8000
+    volumes:
+      - ./backend:/app  # Mount backend directory for live code editing
+    networks:
+      - miracle-network
+
+  # Frontend container (e.g., React app)
+  frontend:
+    build: ./frontend  # Path to your frontend Dockerfile
+    container_name: miracle_frontend
+    depends_on:
+      - backend  # Ensure backend is running before frontend starts
+    ports:
+      - "3000:3000"  # Expose the frontend on port 3000
+    networks:
+      - miracle-network
+
+  # Scraper container
+  scraper:
+    build: ./data/scrap  # Path to your scraper Dockerfile
+    container_name: miracle_scraper
+    environment:
+      DB_NAME: miracle_scrap
+      DB_USER: edwardch
+      DB_PASSWORD: 123456
+      DB_HOST: db  
+      DB_PORT: 5432
+    depends_on:
+      - db  
+    volumes:
+      - ./data/scrap:/app  
+    entrypoint: ["python", "scraper.py"]  # Command to run the scraper script
+    networks:
+      - miracle-network
+
+volumes:
+  postgres_data:
+
+networks:
+  miracle-network:
+    driver: bridge

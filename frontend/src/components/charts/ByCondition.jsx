@@ -6,9 +6,9 @@ const ByCondition = () => {
     const [trialsByCondition, setTrialsByCondition] = useState([]);
 
     useEffect(() => {
-      fetch("/api/trials-by-condition") // Thanks to proxy, this hits FastAPI
+      fetch("http://localhost:8000/api/trials-by-condition") // Thanks to proxy, this hits FastAPI
         .then(response => response.json())
-        .then(data => {setTrialsByCondition(data.slice(0, 10))})
+        .then(data => {setTrialsByCondition(data.slice(0, 10)); console.log('fetched trials by condition')})
         .catch(error => console.error("Error fetching data:", error));
     }, []);
 

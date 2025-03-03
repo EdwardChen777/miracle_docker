@@ -1,4 +1,4 @@
 fastapi
 uvicorn
-psycopg2
+psycopg2-binary==2.9.10
 pandas

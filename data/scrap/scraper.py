@@ -26,6 +26,7 @@ DB_NAME = os.getenv('DB_NAME', 'miracle_scrap')
 DB_USER = os.getenv('DB_USER', 'edwardch')
 DB_PASSWORD = os.getenv('DB_PASSWORD', '123456')
 
+# retrieve the latest clinical_trial archive if download fail
 def retrieve_latest_clinical_trials():
     # set up directories 
     curr_dir = os.getcwd()
@@ -49,9 +50,9 @@ def retrieve_latest_clinical_trials():
     shutil.copy(latest_file_path, download_path)
     print(f"Copied latest archive file: {latest_file_path} -> {download_path}")
 
+# scrap clinical_trials.gov
 def scrape_clinical_trials(download_dir, max_attempts=2):
     """Scrapes clinical trials data and retries on failure."""
-    
     attempt = 0
     while attempt < max_attempts:
         try:
@@ -74,6 +75,7 @@ def scrape_clinical_trials(download_dir, max_attempts=2):
 
             # Initializing WebDriver
             service = Service(ChromeDriverManager().install())
+            
             driver = webdriver.Chrome(service=service, options=options)
 
             driver.get("https://clinicaltrials.gov/search")
@@ -249,16 +251,16 @@ def combine_data():
         )
         cursor = conn.cursor()
 
-        # Step 1: Clear combined_trials table
+        # Clear combined_trials table
         cursor.execute("TRUNCATE TABLE transformed.combined_trials RESTART IDENTITY;")
 
-        # Step 2: Insert US trials
+        # Insert US trials
         cursor.execute("""
             INSERT INTO transformed.combined_trials (study_identifier, study_title, conditions, sponsor, source)
             SELECT study_identifier, study_title, conditions, sponsor, 'ClinicalTrials.gov' FROM raw.us;
         """)
 
-        # Step 3: Insert EU trials
+        # Insert EU trials
         cursor.execute("""
             INSERT INTO transformed.combined_trials (study_identifier, study_title, conditions, sponsor, source)
             SELECT study_identifier, study_title, conditions, sponsor, 'EudraCT' FROM raw.eu;
