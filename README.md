@@ -4,43 +4,16 @@ This project contains a **FastAPI backend**, a **React frontend** with **Tailwin
 
 ---
 
-## Install App
+## Clone Repository
 
 ```
-git clone https://github.com/EdwardChen777/miracle.git
-cd backend 
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-uvicorn api:app --host 127.0.0.1 --port 8000 --reload
-deactivate
-```
-Open another terminal to serve the front end
-```
-cd frontend
-npm install
-npm run dev
+git clone https://github.com/EdwardChen777/miracle_docker.git
+docker-compose up --build -d
 ```
 
-## Running Web Scraping Script Locally
-```
-cd data
-cd scrap
-mkdir download && mkdir raw_data_archive
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-pip install --upgrade webdriver-manager
-python scraper.py
-deactivate
-```
-
-## Building Docker Container for Web Scraping Script with PostgreSQL Database
-```
-cd data
-docker-compose build
-docker-compose up -d
-```
+## Retrieving Data for archive folder 
+Download data from **https://clinicaltrials.gov/search** and move to data/scrap/download
+Add the current timestamp to it in the format of YYYYmmdd_hhmmss (e.g. ctg-studies_20250303_055829)
 
 ## Setting Up Cron Job in Docker
 Replace the last line of data/scrap/dockerfile
@@ -53,4 +26,7 @@ WORKDIR /app
 RUN echo "*/45 * * * * python /app/scraper.py" > /etc/crontabs/root  # Runs scraper.py every 45 minutes
 CMD ["crond", "-f"]
 ```
+
+## Outstanding Issue
+The incompatibility between Chromedriver and Chrome is an outstanding issue, which requires manually downloading the CSV file and placing it in the archive folder.
 
